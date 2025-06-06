@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Travelling Salesman</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f4f6f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-top: 150px;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 50px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 600px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #333;
+        }
+
+        textarea {
+            width: 96.5%;
+            height: 120px;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 18px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        pre#output {
+            background-color: #f4f6f8;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 6px;
+        }
+
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Travelling Salesman Problem</h2>
+        <textarea id="cities" rows="6" cols="40" placeholder="Enter cities, one per line, in format: city -> new line -> city"></textarea><br><br>
+        <button onclick="solve()">Solve</button>
+        <pre id="output"></pre>
+    </div>
+
+    <script>
+        function solve() {
+            const input = document.getElementById("cities").value
+                .split("\n")
+                .map(c => c.trim())
+                .filter(c => c.length > 0)
+
+            document.getElementById("output").classList.remove("error");
+
+            if (input.length === 1) {
+                document.getElementById("output").innerText = "Error: Input should consist of at least 2 cities entered line by line.";
+                document.getElementById("output").classList.add("error");
+                return;
+            }
+
+            fetch("/api/tsp", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({cities: input})
+            })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById("output").innerText = "Optimal route:\n" + data.orderedCities.join(" → ");
+            })
+            .catch(err => {
+                document.getElementById("output").innerText = "Error: " + err.message;
+                console.error("Request failed:", err);
+            });
+        }
+    </script>
+</body>
+</html>
