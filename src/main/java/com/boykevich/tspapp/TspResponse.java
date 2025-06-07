@@ -3,6 +3,8 @@ package com.boykevich.tspapp;
 import java.util.List;
 
 /**
+ * This class is used to represent the response body.
+ *
  * @author Dmitry Boikevych
  */
 public class TspResponse {

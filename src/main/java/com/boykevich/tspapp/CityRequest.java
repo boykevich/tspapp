@@ -3,6 +3,8 @@ package com.boykevich.tspapp;
 import java.util.List;
 
 /**
+ * Class is used to represent the request body.
+ *
  * @author Dmitry Boikevych
  */
 public class CityRequest {
